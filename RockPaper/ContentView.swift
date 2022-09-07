@@ -14,6 +14,8 @@ struct ContentView: View {
     @State var userSelection = 0
     @State var computerSelection = 0
     @State var winText = ""
+    @State var numberOfPlays = 0
+    @State var showScores = false
 
 
     // game has two modes - revealResult - buttons don't work, and we can see the computer result
@@ -30,11 +32,15 @@ struct ContentView: View {
         ZStack{
             LinearGradient(colors: [.white, .gray], startPoint: .top, endPoint: .bottom)
             VStack{
-                Button("Score: \(score)"){
-                    score = 0
+                if showScores {
+                    Text("Score: \(score)")
+                    .font(.title)
+                    .foregroundColor(.primary)
+                } else {
+                    Text("Score: \(score)")
+                    .font(.title)
+                    .hidden()
                 }
-                .font(.title)
-                .foregroundColor(.primary)
                 
                 Spacer()
                 if goalIsWinThisTurn {
@@ -72,6 +78,11 @@ struct ContentView: View {
                     Button("Play again") {
                         goalIsWinThisTurn = Bool.random()
                         revealResult = false
+                        if showScores {
+                            score = 0
+                            numberOfPlays = 0
+                            showScores.toggle()
+                        }
                     }
                     .buttonStyle(CustomButtonStyle())
                 }
@@ -84,8 +95,6 @@ struct ContentView: View {
                         .hidden()
                     Spacer()
                     Button("Play again") {
-                        goalIsWinThisTurn = Bool.random()
-                        revealResult = false
                     }
                     .buttonStyle(CustomButtonStyle())
                     .hidden()
@@ -145,6 +154,8 @@ struct ContentView: View {
         if !revealResult {
             computerSelection = Int.random(in: 0...2)
             userSelection = selection
+            numberOfPlays += 1
+            showScores = numberOfPlays == 10
             if didUserWin(user: userSelection, computer: computerSelection) {
                 winText = "You win"
                 if goalIsWinThisTurn {

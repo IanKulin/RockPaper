@@ -119,58 +119,18 @@ struct ContentView: View {
             }
         }
     }
-    
-    func didUserWin(user: Shape, computer: Shape) -> Bool {
-        switch user {
-        case .rock:
-            switch computer {
-            case .scissors: return true
-            default: return false
-            }
-        case .paper:
-            switch computer {
-            case .rock: return true
-            default: return false
-            }
-        case .scissors:
-            switch computer {
-            case .paper: return true
-            default: return false
-            }
-        }
-    }
-    
-    func didComputerWin(user: Shape, computer: Shape) -> Bool {
-        switch computer {
-        case .rock:
-            switch user  {
-            case .scissors: return true
-            default: return false
-            }
-        case .paper:
-            switch user  {
-            case .rock: return true
-            default: return false
-            }
-        case .scissors:
-            switch user  {
-            case .paper: return true
-            default: return false
-            }
-        }
-    }
+
     
     func processButton(selection: Shape) {
         if !revealResult {
             computerSelection = Shape.random()
             userSelection = selection
             numberOfPlays += 1
-            showScores = numberOfPlays == 10
+            showScores = (numberOfPlays == 10)
             if didUserWin(user: userSelection, computer: computerSelection) {
-                winText = "You win"
                 if goalIsWinThisTurn {
                     score += 1
-                    winText = "You win"
+                    winText = "You win!"
                 } else {
                     score -= 1
                     winText = "You win, sorry"
@@ -189,8 +149,49 @@ struct ContentView: View {
             revealResult = true
         }
     }
-    
 
+}
+
+
+func didUserWin(user: Shape, computer: Shape) -> Bool {
+    switch user {
+    case .rock:
+        switch computer {
+        case .scissors: return true
+        default: return false
+        }
+    case .paper:
+        switch computer {
+        case .rock: return true
+        default: return false
+        }
+    case .scissors:
+        switch computer {
+        case .paper: return true
+        default: return false
+        }
+    }
+}
+
+
+func didComputerWin(user: Shape, computer: Shape) -> Bool {
+    switch computer {
+    case .rock:
+        switch user  {
+        case .scissors: return true
+        default: return false
+        }
+    case .paper:
+        switch user  {
+        case .rock: return true
+        default: return false
+        }
+    case .scissors:
+        switch user  {
+        case .paper: return true
+        default: return false
+        }
+    }
 }
 
 

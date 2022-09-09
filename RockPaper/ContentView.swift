@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-// Some terminology: a "shape" is the shape made with the hand
-// in each "play" of the game
-
-
-
 
 enum FingerShape: String {
     case rock = "🪨"
@@ -35,7 +30,6 @@ enum GameResult {
 }
 
 
-
 struct ContentView: View {
     @State var score = 0
     @State var goalIsWinThisTurn = Bool.random()
@@ -47,7 +41,6 @@ struct ContentView: View {
     // game has two modes - revealResult - buttons don't work, and we can see the computer result
     // or !revealResult - user can chose their play
     @State var revealResult = false
-    
     
     var body: some View {
         ZStack{
@@ -79,8 +72,8 @@ struct ContentView: View {
                     }
                     Spacer()
                 }.font(.system(size: 60))
-                
                 Spacer()
+                
                 Group {
                     Text(computerSelection.rawValue)
                         .font(.system(size: 200))

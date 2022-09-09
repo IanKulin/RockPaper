@@ -13,12 +13,12 @@ import SwiftUI
 
 
 
-enum Shape: String {
+enum FingerShape: String {
     case rock = "🪨"
     case paper = "📃"
     case scissors = "✂️"
     
-    static func random() -> Shape {
+    static func random() -> FingerShape {
         switch Int.random(in: 0...2) {
             case 0: return self.rock
             case 1: return self.paper
@@ -28,12 +28,19 @@ enum Shape: String {
 }
 
 
+enum GameResult {
+    case win
+    case loss
+    case draw
+}
+
+
 
 struct ContentView: View {
     @State var score = 0
     @State var goalIsWinThisTurn = Bool.random()
-    @State var userSelection: Shape = .rock
-    @State var computerSelection: Shape = .rock
+    @State var userSelection: FingerShape = .rock
+    @State var computerSelection: FingerShape = .rock
     @State var winText = ""
     @State var numberOfPlays = 0
     @State var showScores = false
@@ -71,15 +78,15 @@ struct ContentView: View {
                 Spacer()
                 HStack{
                     Spacer()
-                    Button(Shape.rock.rawValue) {
+                    Button(FingerShape.rock.rawValue) {
                         processButton(selection: .rock)
                     }
                     Spacer()
-                    Button(Shape.paper.rawValue) {
+                    Button(FingerShape.paper.rawValue) {
                         processButton(selection: .paper)
                     }
                     Spacer()
-                    Button(Shape.scissors.rawValue){
+                    Button(FingerShape.scissors.rawValue){
                         processButton(selection: .scissors)
                     }
                     Spacer()
@@ -121,13 +128,14 @@ struct ContentView: View {
     }
 
     
-    func processButton(selection: Shape) {
+    func processButton(selection: FingerShape) {
         if !revealResult {
-            computerSelection = Shape.random()
-            userSelection = selection
+            computerSelection = FingerShape.random()
             numberOfPlays += 1
             showScores = (numberOfPlays == 10)
-            if didUserWin(user: userSelection, computer: computerSelection) {
+            let result = gameResult(user: selection, computer: computerSelection)
+            switch result {
+            case .win :
                 if goalIsWinThisTurn {
                     score += 1
                     winText = "You win!"
@@ -135,7 +143,7 @@ struct ContentView: View {
                     score -= 1
                     winText = "You win, sorry"
                 }
-            } else if didComputerWin(user: userSelection, computer: computerSelection) {
+            case .loss:
                 if goalIsWinThisTurn {
                     score -= 1
                     winText = "You lose, sorry"
@@ -143,8 +151,7 @@ struct ContentView: View {
                     score += 1
                     winText = "You lose!"
                 }
-            } else {
-                winText = "Draw"
+            case .draw: winText = "Draw"
             }
             revealResult = true
         }
@@ -153,43 +160,25 @@ struct ContentView: View {
 }
 
 
-func didUserWin(user: Shape, computer: Shape) -> Bool {
+func gameResult(user: FingerShape, computer: FingerShape) -> GameResult {
     switch user {
     case .rock:
         switch computer {
-        case .scissors: return true
-        default: return false
-        }
+        case .rock: return .draw
+        case .paper: return .loss
+        case .scissors: return .win
+       }
     case .paper:
         switch computer {
-        case .rock: return true
-        default: return false
+            case .rock: return .win
+            case .paper: return .draw
+            case .scissors: return .loss
         }
     case .scissors:
-        switch computer {
-        case .paper: return true
-        default: return false
-        }
-    }
-}
-
-
-func didComputerWin(user: Shape, computer: Shape) -> Bool {
-    switch computer {
-    case .rock:
-        switch user  {
-        case .scissors: return true
-        default: return false
-        }
-    case .paper:
-        switch user  {
-        case .rock: return true
-        default: return false
-        }
-    case .scissors:
-        switch user  {
-        case .paper: return true
-        default: return false
+            switch computer {
+            case .rock: return .loss
+            case .paper: return .win
+            case .scissors: return .draw
         }
     }
 }

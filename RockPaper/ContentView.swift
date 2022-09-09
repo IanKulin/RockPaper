@@ -39,12 +39,10 @@ enum GameResult {
 struct ContentView: View {
     @State var score = 0
     @State var goalIsWinThisTurn = Bool.random()
-    @State var userSelection: FingerShape = .rock
     @State var computerSelection: FingerShape = .rock
     @State var winText = ""
     @State var numberOfPlays = 0
     @State var showScores = false
-
 
     // game has two modes - revealResult - buttons don't work, and we can see the computer result
     // or !revealResult - user can chose their play
@@ -55,27 +53,17 @@ struct ContentView: View {
         ZStack{
             LinearGradient(colors: [.white, .gray], startPoint: .top, endPoint: .bottom)
             VStack{
-                if showScores {
-                    Text("Score: \(score)")
+                
+                Text("Score: \(score)")
                     .font(.title)
                     .foregroundColor(.primary)
-                } else {
-                    Text("Score: \(score)")
+                    .opacity(showScores ? 1 : 0)
+                Spacer()
+                
+                Text(goalIsWinThisTurn ? "Try to win" : "Try to lose")
                     .font(.title)
-                    .hidden()
-                }
-                
                 Spacer()
-                if goalIsWinThisTurn {
-                    Text("Try to win")
-                        .font(.title)
-                }
-                else {
-                    Text("Try to lose")
-                        .font(.title)
-                }
                 
-                Spacer()
                 HStack{
                     Spacer()
                     Button(FingerShape.rock.rawValue) {
@@ -93,7 +81,7 @@ struct ContentView: View {
                 }.font(.system(size: 60))
                 
                 Spacer()
-                if revealResult {
+                Group {
                     Text(computerSelection.rawValue)
                         .font(.system(size: 200))
                     Text(winText).font(.title)
@@ -109,19 +97,7 @@ struct ContentView: View {
                     }
                     .buttonStyle(CustomButtonStyle())
                 }
-                else {
-                    Text(computerSelection.rawValue)
-                        .font(.system(size: 200))
-                        .hidden()
-                    Text(winText)
-                        .font(.title)
-                        .hidden()
-                    Spacer()
-                    Button("Play again") {
-                    }
-                    .buttonStyle(CustomButtonStyle())
-                    .hidden()
-                }
+                .opacity(revealResult ? 1 : 0)
                 Spacer()
             }
         }
